@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+temp_auto_push.bat
+
+# Logs and local caches
+*.log
+.pnpm-store/
+.docx_review/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE-local project state
+.idea/
+.gitignore
+branch_structure.json
