@@ -3,3 +3,17 @@ packages:
 
 allowBuilds:
   '@scarf/scarf': false
+
+overrides:
+  'multer@2.4.0': 2.5.0
+  'source-map-js@1.2.1': 1.2.2
+  'vite@8.3.1': 8.3.3
+
+minimumReleaseAgeExclude:
+  - source-map-js@1.2.2
+  - vite@8.3.3
+  - '@vitest/mocker@4.1.12'
+  - body-parser@2.4.0
+  - multer@2.5.0
+  - fast-uri@3.1.9
+  - qs@6.16.1
