@@ -10,7 +10,6 @@ coverage/
 .env
 .env.*
 !.env.example
-temp_auto_push.bat
 
 # Logs and local caches
 *.log
@@ -23,5 +22,3 @@ Thumbs.db
 
 # IDE-local project state
 .idea/
-.gitignore
-branch_structure.json
