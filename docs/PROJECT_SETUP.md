@@ -4,7 +4,7 @@
 
 The repository was initialized as a NestJS 12 backend using TypeScript, ESM, strict type checking, Vitest, OXLint, Prettier, and pnpm.
 
-The project uses Node.js 24 and pins pnpm 11 through `package.json`. The machine's `npm` command is currently broken, so project commands should be run with pnpm.
+The project uses Node.js 24 and pnpm 11, as declared in `package.json`.
 
 ## Application foundation
 
@@ -16,6 +16,7 @@ The project uses Node.js 24 and pins pnpm 11 through `package.json`. The machine
 - Uploaded secrets and local `.env` files are excluded from Git.
 - The unused Nest deployment package was removed.
 - The optional `@scarf/scarf` install script used by Swagger UI is explicitly blocked.
+- Unused static assets and unrelated recovery artifacts were removed.
 
 ## Environment variables
 
@@ -30,7 +31,7 @@ CORS_ORIGIN=http://localhost:3001
 SWAGGER_ENABLED=true
 ```
 
-A local ignored `.env` was also created with development defaults.
+Create a local ignored `.env` from `.env.example` when setting up a fresh clone.
 
 ## VS Code setup
 
@@ -72,8 +73,8 @@ The following checks passed:
 
 ## Git configuration
 
-The local repository is connected to:
+The repository is connected to:
 
 `https://github.com/S-K-I-F-A/Skifa_Backend.git`
 
-The local `main` branch tracks `origin/main`. The remote originally contained one initial commit with only a README. The NestJS setup remains uncommitted and has not been pushed.
+Development work is performed on the `dev` branch. Do not commit local secrets, generated output, dependency folders, or IDE-specific user state.

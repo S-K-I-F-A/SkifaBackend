@@ -12,11 +12,11 @@ NestJS API for the Skifa internship placement platform.
 
 ```powershell
 pnpm install
-Copy-Item .env.example .env
+Copy-Item .env.example .env # Skip this if .env already exists
 pnpm start:dev
 ```
 
-The repository already contains a safe local `.env`. Copying the example is only needed after a fresh clone.
+The committed `.env.example` documents the required settings. Keep the local `.env` file uncommitted.
 
 ## Local endpoints
 
