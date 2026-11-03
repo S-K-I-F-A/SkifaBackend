@@ -13,6 +13,8 @@ The project uses Node.js 24 and pnpm 11, as declared in `package.json`.
 - CORS, Helmet security headers, and global DTO validation are enabled.
 - Swagger documentation is available at `/docs`.
 - A health endpoint is available at `/api/v1/health`.
+- Authentication, profiles, talent discovery, billing entitlements, verification, media, notifications, placements, and wallet APIs are available.
+- Local development uses SQL.js; PostgreSQL is supported for deployments.
 - Uploaded secrets and local `.env` files are excluded from Git.
 - The unused Nest deployment package was removed.
 - The optional `@scarf/scarf` install script used by Swagger UI is explicitly blocked.
@@ -24,10 +26,10 @@ The committed `.env.example` contains:
 
 ```env
 NODE_ENV=development
-PORT=3000
+PORT=4000
 API_PREFIX=api
 API_VERSION=1
-CORS_ORIGIN=http://localhost:3001
+CORS_ORIGIN=http://localhost:3000
 SWAGGER_ENABLED=true
 ```
 
@@ -54,8 +56,8 @@ pnpm build
 
 Local URLs:
 
-- Health: `http://localhost:3000/api/v1/health`
-- Swagger: `http://localhost:3000/docs`
+- Health: `http://localhost:4000/api/v1/health`
+- Swagger: `http://localhost:4000/docs`
 
 ## Verification completed
 

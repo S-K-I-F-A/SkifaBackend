@@ -20,8 +20,10 @@ The committed `.env.example` documents the required settings. Keep the local `.e
 
 ## Local endpoints
 
-- API health: `http://localhost:3000/api/v1/health`
-- Swagger documentation: `http://localhost:3000/docs`
+- API health: `http://localhost:4000/api/v1/health`
+- Swagger documentation: `http://localhost:4000/docs`
+
+The backend runs on port `4000` so the Next.js frontend can use port `3000`.
 
 ## Commands
 
@@ -53,6 +55,8 @@ test/           End-to-end tests
 
 New product capabilities should be added as feature modules under `src/`, for example `auth`, `interns`, `companies`, `assessments`, and `placements`.
 
+Implemented modules now cover authentication, intern and company profiles, talent discovery, entitlements, mock checkout, email confirmation, identity verification, video CV uploads, notifications, placements, and wallets.
+
 ## Environment variables
 
 Use `.env.example` as the committed reference. Never commit `.env` or production secrets.
@@ -60,11 +64,23 @@ Use `.env.example` as the committed reference. Never commit `.env` or production
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `NODE_ENV` | `development` | Runtime environment |
-| `PORT` | `3000` | HTTP port |
+| `PORT` | `4000` | HTTP port |
 | `API_PREFIX` | `api` | Global API path prefix |
 | `API_VERSION` | `1` | Default URI API version |
-| `CORS_ORIGIN` | `http://localhost:3001` | Comma-separated allowed frontend origins |
+| `CORS_ORIGIN` | `http://localhost:3000` | Comma-separated allowed frontend origins |
 | `SWAGGER_ENABLED` | `true` | Enables Swagger at `/docs` |
+
+See [Frontend API Integration](docs/FRONTEND_API.md) for the full route map and production requirements.
+See [Code Walkthrough](docs/CODE_WALKTHROUGH.md) for a class-by-class explanation of the backend.
+
+## Postman
+
+Import both files from `postman/`:
+
+- `Skifa_Backend.postman_collection.json`
+- `Skifa_Local.postman_environment.json`
+
+Start with **Auth → Register Intern**. The collection automatically saves access tokens and resource IDs into the environment.
 
 ## VS Code
 
