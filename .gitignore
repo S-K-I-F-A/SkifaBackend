@@ -7,8 +7,6 @@ coverage/
 *.tsbuildinfo
 
 # Environment and secrets
-.env
-.env.*
 !.env.example
 
 # Logs and local caches
@@ -24,3 +22,4 @@ Thumbs.db
 
 # IDE-local project state
 .idea/
+config.bat
