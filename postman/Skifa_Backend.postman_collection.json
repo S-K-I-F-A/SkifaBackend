@@ -1,0 +1,390 @@
+{
+  "info": {
+    "_postman_id": "52cf9379-82f9-4cb5-8aad-403a4c11d8b0",
+    "name": "Skifa Backend",
+    "description": "Verified MVP API flow for the Skifa frontend. Run Auth/Register Intern first, then the intern checkout. Register and activate a company before testing placements and salary payments.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "auth": { "type": "noauth" },
+          "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Intern",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.environment.set('accessToken', data.accessToken);",
+                  "pm.environment.set('internUserId', data.user.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{internEmail}}\",\n  \"password\": \"{{password}}\",\n  \"fullName\": \"Amara Okafor\",\n  \"headline\": \"Frontend developer\",\n  \"bio\": \"I build accessible frontend applications for growing teams.\",\n  \"state\": \"Lagos\",\n  \"city\": \"Ikeja\",\n  \"phone\": \"+2348012345678\",\n  \"category\": \"Tech\",\n  \"skills\": [{ \"name\": \"React\", \"level\": \"Professional\" }],\n  \"experience\": \"1-2 years\",\n  \"availability\": \"Full-time\",\n  \"stipendMin\": 300,\n  \"stipendMax\": 450,\n  \"education\": [{ \"school\": \"University of Lagos\", \"course\": \"B.Sc. Computer Science\", \"years\": \"2019-2023\" }],\n  \"certifications\": [\"Meta Front-End Developer\"],\n  \"workSamples\": [\"https://github.com/example\"]\n}"
+            },
+            "url": "{{baseUrl}}/auth/register/intern"
+          }
+        },
+        {
+          "name": "Register Company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.environment.set('companyAccessToken', data.accessToken);",
+                  "pm.environment.set('companyUserId', data.user.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{companyEmail}}\",\n  \"password\": \"{{password}}\",\n  \"name\": \"Acme Labs\",\n  \"industry\": \"Software & SaaS\",\n  \"size\": \"11-50\",\n  \"state\": \"Lagos\",\n  \"city\": \"Ikeja\",\n  \"address\": \"1 Example Street\",\n  \"description\": \"We build software products for growing African businesses.\",\n  \"contactName\": \"Ada Manager\",\n  \"jobTitle\": \"People Lead\",\n  \"phone\": \"+2348011111111\",\n  \"contactEmail\": \"people@acme.test\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register/company"
+          }
+        },
+        {
+          "name": "Login Intern",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.environment.set('accessToken', pm.response.json().accessToken);"] }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{internEmail}}\",\n  \"password\": \"{{password}}\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login Company",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.environment.set('companyAccessToken', pm.response.json().accessToken);"] }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{companyEmail}}\",\n  \"password\": \"{{password}}\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.environment.set('adminAccessToken', pm.response.json().accessToken);"] }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Current User",
+          "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" }
+        },
+        {
+          "name": "Send Confirmation Email",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\": \"{{internEmail}}\" }" },
+            "url": "{{baseUrl}}/confirmation-email"
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "auth": { "type": "noauth" },
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\": \"{{internEmail}}\" }" },
+            "url": "{{baseUrl}}/auth/forgot-password"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profiles",
+      "item": [
+        {
+          "name": "Get Intern Profile",
+          "request": { "method": "GET", "url": "{{baseUrl}}/intern/profile" }
+        },
+        {
+          "name": "Update Intern Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"headline\": \"Frontend engineer building accessible products\",\n  \"availability\": \"Full-time\"\n}" },
+            "url": "{{baseUrl}}/intern/profile"
+          }
+        },
+        {
+          "name": "Upload Intern Photos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "headshot", "type": "file", "src": "{{headshotPath}}" },
+                { "key": "fullBody", "type": "file", "src": "{{fullBodyPath}}" }
+              ]
+            },
+            "url": "{{baseUrl}}/intern/profile/photos"
+          }
+        },
+        {
+          "name": "Get Company Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{companyAccessToken}}", "type": "text" }],
+            "url": "{{baseUrl}}/company/profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Billing and Entitlements",
+      "item": [
+        {
+          "name": "Get Intern Entitlements",
+          "request": { "method": "GET", "url": "{{baseUrl}}/entitlements" }
+        },
+        {
+          "name": "Make Intern Profile Visible (Mock)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"purpose\": \"profile_visibility\",\n  \"returnUrl\": \"http://localhost:3000/intern/payment-return\"\n}" },
+            "url": "{{baseUrl}}/checkout"
+          }
+        },
+        {
+          "name": "Activate Intern Pro (Mock)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"purpose\": \"pro\",\n  \"returnUrl\": \"http://localhost:3000/intern/upgrade\"\n}" },
+            "url": "{{baseUrl}}/checkout"
+          }
+        },
+        {
+          "name": "Activate Company (Mock)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{companyAccessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"purpose\": \"company_activation\",\n  \"returnUrl\": \"http://localhost:3000/company/profile-preview\"\n}" },
+            "url": "{{baseUrl}}/checkout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Talent",
+      "item": [
+        {
+          "name": "Search Visible Talent",
+          "auth": { "type": "noauth" },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const data = pm.response.json();", "if (data.items && data.items[0]) pm.environment.set('talentId', data.items[0].id);"] }
+            }
+          ],
+          "request": { "method": "GET", "url": "{{baseUrl}}/talent?skill=React&state=Lagos&sort=newest" }
+        },
+        {
+          "name": "Get Full Talent Profile as Active Company",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{companyAccessToken}}", "type": "text" }],
+            "url": "{{baseUrl}}/talent/{{talentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Identity and Video",
+      "item": [
+        {
+          "name": "Get Verification Status",
+          "request": { "method": "GET", "url": "{{baseUrl}}/verification" }
+        },
+        {
+          "name": "Submit NIN Verification",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.environment.set('verificationId', pm.response.json().id);"] }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "nin", "value": "12345678901", "type": "text" },
+                { "key": "consent", "value": "true", "type": "text" },
+                { "key": "front", "type": "file", "src": "{{ninFrontPath}}" },
+                { "key": "back", "type": "file", "src": "{{ninBackPath}}" },
+                { "key": "selfie", "type": "file", "src": "{{selfiePath}}" }
+              ]
+            },
+            "url": "{{baseUrl}}/verification/identity"
+          }
+        },
+        {
+          "name": "Upload Video CV",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "formdata", "formdata": [{ "key": "video", "type": "file", "src": "{{videoPath}}" }] },
+            "url": "{{baseUrl}}/video-cv"
+          }
+        },
+        {
+          "name": "Admin Review Verification",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"verified\", \"note\": \"Documents approved.\" }" },
+            "url": "{{baseUrl}}/admin/verifications/{{verificationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "List Notifications",
+          "request": { "method": "GET", "url": "{{baseUrl}}/notifications" }
+        },
+        {
+          "name": "Mark All Read",
+          "request": { "method": "PATCH", "url": "{{baseUrl}}/notifications/read-all" }
+        }
+      ]
+    },
+    {
+      "name": "Placements",
+      "item": [
+        {
+          "name": "Request Placement",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.environment.set('placementId', pm.response.json().id);"] }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{companyAccessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"talentId\": \"{{talentId}}\",\n  \"role\": \"Frontend intern\",\n  \"startDate\": \"2026-12-01\",\n  \"monthlyStipend\": 400\n}" },
+            "url": "{{baseUrl}}/placements"
+          }
+        },
+        {
+          "name": "Accept Placement as Intern",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"accepted\" }" },
+            "url": "{{baseUrl}}/placements/{{placementId}}/status"
+          }
+        },
+        {
+          "name": "List My Placements",
+          "request": { "method": "GET", "url": "{{baseUrl}}/placements" }
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "Get Intern Wallet",
+          "request": { "method": "GET", "url": "{{baseUrl}}/wallet" }
+        },
+        {
+          "name": "Company Top Up (Mock)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{companyAccessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"amount\": 1000 }" },
+            "url": "{{baseUrl}}/wallet/top-ups"
+          }
+        },
+        {
+          "name": "Company Salary Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{companyAccessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"talentId\": \"{{talentId}}\", \"amount\": 400 }" },
+            "url": "{{baseUrl}}/wallet/salary-payments"
+          }
+        },
+        {
+          "name": "List Wallet Transactions",
+          "request": { "method": "GET", "url": "{{baseUrl}}/wallet/transactions" }
+        }
+      ]
+    }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:4000/api/v1" }]
+}
