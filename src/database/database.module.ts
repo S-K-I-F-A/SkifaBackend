@@ -23,6 +23,7 @@ import { InitialSchema1762074000000 } from './migrations/1762074000000-initial-s
             autoLoadEntities: true,
             synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
             migrations: [InitialSchema1762074000000],
+            migrationsTableName: 'typeorm_migrations',
             migrationsRun: config.get<boolean>(
               'DB_MIGRATIONS_RUN',
               isProduction,

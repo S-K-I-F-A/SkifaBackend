@@ -7,11 +7,14 @@ coverage/
 *.tsbuildinfo
 
 # Environment and secrets
+.env
+.env.*
 !.env.example
 
 # Logs and local caches
 *.log
 .pnpm-store/
+.local-postgres/
 .docx_review/
 data/*.sqlite
 uploads/
