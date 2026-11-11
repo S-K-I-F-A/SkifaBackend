@@ -1,6 +1,7 @@
 import { createHmac } from 'node:crypto';
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -44,7 +45,18 @@ export class VerificationService {
     user: UserEntity,
     dto: SubmitVerificationDto,
     files: VerificationFiles,
+    resubmissionId?: string,
   ) {
+    if (resubmissionId) {
+      const previous = await this.verifications.findOneBy({
+        id: resubmissionId,
+        userId: user.id,
+      });
+      if (!previous) throw new NotFoundException('Verification not found.');
+      if (!['resubmit', 'rejected'].includes(previous.status)) {
+        throw new ConflictException('This verification cannot be resubmitted.');
+      }
+    }
     if (dto.consent !== 'true') {
       throw new BadRequestException('Document ownership consent is required.');
     }

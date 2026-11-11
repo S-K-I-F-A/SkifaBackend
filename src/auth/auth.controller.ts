@@ -18,10 +18,11 @@ import {
   RegisterInternDto,
   ResetPasswordDto,
   TokenDto,
+  ChangePasswordDto,
 } from './auth.dto.js';
 import { AuthService } from './auth.service.js';
 import { CurrentUser } from './current-user.decorator.js';
-import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { JwtAuthGuard, OptionalJwtAuthGuard } from './jwt-auth.guard.js';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -68,23 +69,49 @@ export class AuthController {
     response.clearCookie('skifa_session', this.cookieOptions());
   }
 
-  @Post('forgot-password')
+  @Post(['forgot-password', 'password/forgot'])
   @HttpCode(202)
   async forgotPassword(@Body() dto: EmailDto) {
     await this.auth.requestPasswordReset(dto.email);
     return { accepted: true };
   }
 
-  @Post('reset-password')
+  @Post(['reset-password', 'password/reset'])
   @HttpCode(204)
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.auth.resetPassword(dto.token, dto.password);
   }
 
-  @Post('confirm-email')
+  @Post(['confirm-email', 'email/verify'])
   @HttpCode(204)
   async confirmEmail(@Body() dto: TokenDto): Promise<void> {
     await this.auth.confirmEmail(dto.token);
+  }
+
+  @Get('session')
+  @UseGuards(OptionalJwtAuthGuard)
+  session(@CurrentUser() user?: UserEntity) {
+    return { user: user ? this.auth.publicUser(user) : null };
+  }
+
+  @Post('email/resend')
+  @UseGuards(JwtAuthGuard)
+  async resend(@CurrentUser() user: UserEntity) {
+    return { sent: await this.auth.requestConfirmation(user.email) };
+  }
+
+  @Post('password/change')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async changePassword(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: ChangePasswordDto,
+  ): Promise<void> {
+    await this.auth.changePassword(
+      user.id,
+      dto.currentPassword,
+      dto.newPassword,
+    );
   }
 
   @Get('me')

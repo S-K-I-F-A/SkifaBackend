@@ -16,6 +16,11 @@ export class TalentController {
     return this.talent.list(query, request.user);
   }
 
+  @Get('filters')
+  filters() {
+    return this.talent.filters();
+  }
+
   @Get(':id')
   get(@Param('id') id: string, @Req() request: AuthenticatedRequest) {
     return this.talent.get(id, request.user);

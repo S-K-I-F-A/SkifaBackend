@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
@@ -21,5 +21,15 @@ export class BillingController {
   @Post('checkout')
   checkout(@CurrentUser() user: UserEntity, @Body() dto: CheckoutDto) {
     return this.billing.checkout(user, dto);
+  }
+
+  @Get('billing/products')
+  products() {
+    return this.billing.products();
+  }
+
+  @Get('payments/:id')
+  payment(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.billing.payment(user, id);
   }
 }

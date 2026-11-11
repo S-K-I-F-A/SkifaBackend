@@ -2,10 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   InternProfileEntity,
+  PlacementEntity,
   WalletEntity,
   WalletTransactionEntity,
 } from '../database/entities.js';
-import { WalletController } from './wallet.controller.js';
+import {
+  PlacementSalaryController,
+  WalletController,
+} from './wallet.controller.js';
 import { WalletService } from './wallet.service.js';
 
 @Module({
@@ -14,9 +18,10 @@ import { WalletService } from './wallet.service.js';
       WalletEntity,
       WalletTransactionEntity,
       InternProfileEntity,
+      PlacementEntity,
     ]),
   ],
-  controllers: [WalletController],
+  controllers: [WalletController, PlacementSalaryController],
   providers: [WalletService],
 })
 export class WalletModule {}

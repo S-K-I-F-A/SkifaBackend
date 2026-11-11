@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Put,
   UploadedFile,
@@ -23,6 +24,7 @@ import { RolesGuard } from '../auth/roles.guard.js';
 import {
   UpdateCompanyProfileDto,
   UpdateInternProfileDto,
+  ProfileVisibilityDto,
 } from './profiles.dto.js';
 import { ProfilesService } from './profiles.service.js';
 
@@ -55,12 +57,75 @@ export class ProfilesController {
   }
 
   @Put('intern/profile')
+  @Patch('intern/profile')
   @Roles('intern')
   updateIntern(
     @CurrentUser() user: UserEntity,
     @Body() dto: UpdateInternProfileDto,
   ) {
     return this.profiles.updateIntern(user.id, dto);
+  }
+
+  @Put('intern/profile/education')
+  @Roles('intern')
+  updateEducation(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: UpdateInternProfileDto,
+  ) {
+    return this.profiles.updateIntern(user.id, { education: dto.education });
+  }
+
+  @Put('intern/profile/skills')
+  @Roles('intern')
+  updateSkills(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: UpdateInternProfileDto,
+  ) {
+    return this.profiles.updateIntern(user.id, {
+      skills: dto.skills,
+      experience: dto.experience,
+      availability: dto.availability,
+      category: dto.category,
+      stipendMin: dto.stipendMin,
+      stipendMax: dto.stipendMax,
+    });
+  }
+
+  @Put('intern/profile/certifications')
+  @Roles('intern')
+  updateCertifications(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: UpdateInternProfileDto,
+  ) {
+    return this.profiles.updateIntern(user.id, {
+      certifications: dto.certifications,
+    });
+  }
+
+  @Put('intern/profile/work-samples')
+  @Roles('intern')
+  updateWorkSamples(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: UpdateInternProfileDto,
+  ) {
+    return this.profiles.updateIntern(user.id, {
+      workSamples: dto.workSamples,
+    });
+  }
+
+  @Post('intern/profile/submit')
+  @Roles('intern')
+  submitIntern(@CurrentUser() user: UserEntity) {
+    return this.profiles.submitIntern(user.id);
+  }
+
+  @Post('intern/profile/visibility')
+  @Roles('intern')
+  visibility(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: ProfileVisibilityDto,
+  ) {
+    return this.profiles.setVisibility(user, dto.visibility);
   }
 
   @Post('intern/profile/photos')
@@ -96,12 +161,19 @@ export class ProfilesController {
   }
 
   @Put('company/profile')
+  @Patch('company/profile')
   @Roles('company')
   updateCompany(
     @CurrentUser() user: UserEntity,
     @Body() dto: UpdateCompanyProfileDto,
   ) {
     return this.profiles.updateCompany(user.id, dto);
+  }
+
+  @Post('company/profile/submit')
+  @Roles('company')
+  submitCompany(@CurrentUser() user: UserEntity) {
+    return this.profiles.submitCompany(user.id);
   }
 
   @Post('company/profile/logo')

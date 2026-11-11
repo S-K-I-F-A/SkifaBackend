@@ -65,6 +65,27 @@ export class PlacementsService {
     });
   }
 
+  async get(user: UserEntity, id: string) {
+    const placement = await this.placements.findOneBy({ id });
+    if (!placement) throw new NotFoundException('Placement not found.');
+    if (
+      user.role !== 'admin' &&
+      placement.companyUserId !== user.id &&
+      placement.internUserId !== user.id
+    ) {
+      throw new ForbiddenException();
+    }
+    return placement;
+  }
+
+  transition(
+    user: UserEntity,
+    id: string,
+    status: PlacementStatusDto['status'],
+  ) {
+    return this.updateStatus(user, id, { status });
+  }
+
   async requestReplacement(
     company: UserEntity,
     id: string,
@@ -73,6 +94,7 @@ export class PlacementsService {
     const placement = await this.ownedByCompany(company.id, id);
     placement.replacementRequested = true;
     placement.replacementReason = dto.reason?.trim() || null;
+    placement.status = 'replacement_requested';
     return this.placements.save(placement);
   }
 
@@ -84,7 +106,7 @@ export class PlacementsService {
     if (!ownsPlacement && user.role !== 'admin') throw new ForbiddenException();
     if (
       user.role === 'intern' &&
-      !['accepted', 'rejected'].includes(dto.status)
+      !['accepted', 'declined'].includes(dto.status)
     ) {
       throw new ForbiddenException(
         'Interns can only accept or reject requests.',

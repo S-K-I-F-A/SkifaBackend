@@ -16,8 +16,8 @@ import type { CheckoutDto } from './billing.dto.js';
 
 const AMOUNTS: Record<CheckoutDto['purpose'], number> = {
   profile_visibility: 100,
-  company_activation: 1000,
-  pro: 500,
+  company_activation: 500,
+  pro: 300,
 };
 
 @Injectable()
@@ -39,6 +39,21 @@ export class BillingService {
       profileVisible: user.profileVisible,
       companyActive: user.companyActive,
     };
+  }
+
+  products() {
+    return Object.entries(AMOUNTS).map(([purpose, amountMinor]) => ({
+      purpose,
+      amountMinor,
+      currency: 'USD',
+      interval: purpose === 'pro' ? 'month' : null,
+    }));
+  }
+
+  async payment(user: UserEntity, id: string) {
+    const payment = await this.checkouts.findOneBy({ id, userId: user.id });
+    if (!payment) throw new BadRequestException('Payment not found.');
+    return payment;
   }
 
   async checkout(user: UserEntity, dto: CheckoutDto) {

@@ -5,5 +5,10 @@ export default defineConfig({
     globals: true,
     root: './',
     include: ['**/*.e2e-spec.ts'],
+    env: {
+      NODE_ENV: 'test',
+      ADMIN_EMAIL: 'admin@example.com',
+      ADMIN_PASSWORD: 'correct-horse-battery',
+    },
   },
 });

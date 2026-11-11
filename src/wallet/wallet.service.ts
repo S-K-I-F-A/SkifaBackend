@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import {
   InternProfileEntity,
+  PlacementEntity,
   UserEntity,
   WalletEntity,
   WalletTransactionEntity,
@@ -27,6 +28,8 @@ export class WalletService {
     private readonly transactions: Repository<WalletTransactionEntity>,
     @InjectRepository(InternProfileEntity)
     private readonly interns: Repository<InternProfileEntity>,
+    @InjectRepository(PlacementEntity)
+    private readonly placements: Repository<PlacementEntity>,
   ) {}
 
   async get(user: UserEntity) {
@@ -109,6 +112,17 @@ export class WalletService {
     });
   }
 
+  async withdrawal(user: UserEntity, id: string) {
+    const wallet = await this.wallet(user.id);
+    const transaction = await this.transactions.findOneBy({
+      id,
+      walletId: wallet.id,
+      type: 'withdrawal',
+    });
+    if (!transaction) throw new NotFoundException('Withdrawal not found.');
+    return transaction;
+  }
+
   async paySalary(user: UserEntity, dto: SalaryPaymentDto) {
     if (user.role !== 'company' || !user.companyActive) {
       throw new ForbiddenException('Activate the company account first.');
@@ -151,6 +165,25 @@ export class WalletService {
       await manager.save([debit, credit]);
       return debit;
     });
+  }
+
+  async payPlacementSalary(
+    user: UserEntity,
+    placementId: string,
+    dto: AmountDto,
+  ) {
+    const placement = await this.placements.findOneBy({
+      id: placementId,
+      companyUserId: user.id,
+      status: 'active',
+    });
+    if (!placement) {
+      throw new NotFoundException('Active placement not found.');
+    }
+    const intern = await this.interns.findOneByOrFail({
+      userId: placement.internUserId,
+    });
+    return this.paySalary(user, { amount: dto.amount, talentId: intern.id });
   }
 
   private async wallet(userId: string): Promise<WalletEntity> {

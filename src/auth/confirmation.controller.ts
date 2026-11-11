@@ -1,7 +1,9 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { EmailDto } from './auth.dto.js';
+import type { UserEntity } from '../database/entities.js';
 import { AuthService } from './auth.service.js';
+import { CurrentUser } from './current-user.decorator.js';
+import { JwtAuthGuard } from './jwt-auth.guard.js';
 
 @ApiTags('email')
 @Controller('confirmation-email')
@@ -10,7 +12,8 @@ export class ConfirmationController {
 
   @Post()
   @HttpCode(200)
-  async send(@Body() dto: EmailDto) {
-    return { sent: await this.auth.requestConfirmation(dto.email) };
+  @UseGuards(JwtAuthGuard)
+  async send(@CurrentUser() user: UserEntity) {
+    return { sent: await this.auth.requestConfirmation(user.email) };
   }
 }

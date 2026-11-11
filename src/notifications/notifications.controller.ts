@@ -4,6 +4,8 @@ import {
   Param,
   Patch,
   Query,
+  Body,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -24,13 +26,27 @@ export class NotificationsController {
     return this.notifications.list(user.id, category);
   }
 
-  @Patch('read-all')
+  @Post('mark-all-read')
   markAllRead(@CurrentUser() user: UserEntity) {
     return this.notifications.markAllRead(user.id);
+  }
+
+  @Get('unread-count')
+  unreadCount(@CurrentUser() user: UserEntity) {
+    return this.notifications.unreadCount(user.id);
   }
 
   @Patch(':id/read')
   markRead(@CurrentUser() user: UserEntity, @Param('id') id: string) {
     return this.notifications.markRead(user.id, id);
+  }
+
+  @Patch(':id')
+  setRead(
+    @CurrentUser() user: UserEntity,
+    @Param('id') id: string,
+    @Body() body: { read: boolean },
+  ) {
+    return this.notifications.setRead(user.id, id, body.read);
   }
 }

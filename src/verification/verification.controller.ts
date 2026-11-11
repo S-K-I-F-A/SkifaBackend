@@ -32,13 +32,17 @@ const documentTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 export class VerificationController {
   constructor(private readonly verification: VerificationService) {}
 
-  @Get('verification')
+  @Get(['verification', 'intern/verification'])
   @Roles('intern')
   getStatus(@CurrentUser() user: UserEntity) {
     return this.verification.latest(user.id);
   }
 
-  @Post('verification/identity')
+  @Post([
+    'verification/identity',
+    'intern/verification',
+    'intern/verification/:id/resubmit',
+  ])
   @Roles('intern')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
@@ -67,6 +71,7 @@ export class VerificationController {
   )
   submit(
     @CurrentUser() user: UserEntity,
+    @Param('id') id: string | undefined,
     @Body() dto: SubmitVerificationDto,
     @UploadedFiles()
     files: {
@@ -75,7 +80,7 @@ export class VerificationController {
       selfie?: Express.Multer.File[];
     },
   ) {
-    return this.verification.submit(user, dto, files);
+    return this.verification.submit(user, dto, files, id);
   }
 
   @Get('admin/verifications')
@@ -87,6 +92,12 @@ export class VerificationController {
   @Patch('admin/verifications/:id')
   @Roles('admin')
   review(@Param('id') id: string, @Body() dto: ReviewVerificationDto) {
+    return this.verification.review(id, dto);
+  }
+
+  @Post('admin/verifications/:id/decision')
+  @Roles('admin')
+  decision(@Param('id') id: string, @Body() dto: ReviewVerificationDto) {
     return this.verification.review(id, dto);
   }
 }

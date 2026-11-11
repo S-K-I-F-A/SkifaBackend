@@ -12,8 +12,9 @@ import { InitialSchema1762074000000 } from './migrations/1762074000000-initial-s
       useFactory: (config: ConfigService) => {
         const databaseUrl = config.get<string>('DATABASE_URL');
         const isProduction = config.get<string>('NODE_ENV') === 'production';
+        const isTest = config.get<string>('NODE_ENV') === 'test';
 
-        if (databaseUrl) {
+        if (databaseUrl && !isTest) {
           return {
             type: 'postgres' as const,
             url: databaseUrl,
@@ -31,7 +32,6 @@ import { InitialSchema1762074000000 } from './migrations/1762074000000-initial-s
           };
         }
 
-        const isTest = config.get<string>('NODE_ENV') === 'test';
         const location = resolve(
           config.get<string>('SQLITE_PATH', 'data/skifa.sqlite'),
         );

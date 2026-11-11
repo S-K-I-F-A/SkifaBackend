@@ -38,8 +38,26 @@ pnpm test:cov        # Test coverage
 pnpm lint            # OXLint checks
 pnpm format          # Apply Prettier formatting
 pnpm typecheck       # TypeScript validation
+pnpm db:seed         # Add or refresh reusable local demo data
+pnpm db:seed:local   # Seed SQL.js even when DATABASE_URL is configured
 pnpm check           # Run all local quality checks
 ```
+
+## Demo database seed
+
+Run `pnpm db:seed` after creating a new database. The command applies the
+PostgreSQL migration when needed and then adds an administrator, a company,
+two interns, profiles, wallets, and a sample placement. It is safe to run more
+than once and does not delete other records.
+
+The demo accounts use `SkifaDemo123!` by default. Set `SEED_PASSWORD` in your
+local `.env` file to override it. Production seeding is blocked unless
+`ALLOW_PRODUCTION_SEED=true` is explicitly set.
+
+If `DATABASE_URL` is configured, `pnpm db:seed` targets PostgreSQL and requires
+that server to be running. Use `pnpm db:seed:local` for the file-based local
+database instead; comment out `DATABASE_URL` in `.env` if the application should
+also use that local database.
 
 ## Project structure
 

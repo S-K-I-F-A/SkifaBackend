@@ -80,6 +80,26 @@ export class TalentService {
     return this.present(profile, canSeeDetails);
   }
 
+  async filters() {
+    const profiles = await this.profiles.find();
+    return {
+      skills: [
+        ...new Set(
+          profiles.flatMap((item) => item.skills.map((skill) => skill.name)),
+        ),
+      ].sort(),
+      states: [
+        ...new Set(profiles.map((item) => item.state).filter(Boolean)),
+      ].sort(),
+      experience: [
+        ...new Set(profiles.map((item) => item.experience).filter(Boolean)),
+      ].sort(),
+      availability: [
+        ...new Set(profiles.map((item) => item.availability).filter(Boolean)),
+      ].sort(),
+    };
+  }
+
   private present(profile: InternProfileEntity, includePrivate: boolean) {
     const base = {
       id: profile.id,

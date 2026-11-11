@@ -39,7 +39,37 @@ export class PlacementsController {
     return this.placements.list(user);
   }
 
-  @Post(':id/replacement')
+  @Get(':id')
+  @Roles('intern', 'company', 'admin')
+  get(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.placements.get(user, id);
+  }
+
+  @Post(':id/accept')
+  @Roles('intern', 'admin')
+  accept(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.placements.transition(user, id, 'accepted');
+  }
+
+  @Post(':id/decline')
+  @Roles('intern', 'admin')
+  decline(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.placements.transition(user, id, 'declined');
+  }
+
+  @Post(':id/cancel')
+  @Roles('company', 'admin')
+  cancel(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.placements.transition(user, id, 'cancelled');
+  }
+
+  @Post(':id/end')
+  @Roles('company', 'admin')
+  end(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.placements.transition(user, id, 'ended');
+  }
+
+  @Post([':id/replacement', ':id/replacement-requests'])
   @Roles('company')
   replacement(
     @CurrentUser() user: UserEntity,

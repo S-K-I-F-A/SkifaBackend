@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
@@ -33,8 +41,30 @@ export class WalletController {
     return this.wallet.withdraw(user, dto);
   }
 
+  @Get('withdrawals/:id')
+  withdrawal(@CurrentUser() user: UserEntity, @Param('id') id: string) {
+    return this.wallet.withdrawal(user, id);
+  }
+
   @Post('salary-payments')
   salary(@CurrentUser() user: UserEntity, @Body() dto: SalaryPaymentDto) {
     return this.wallet.paySalary(user, dto);
+  }
+}
+
+@ApiTags('wallet')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('placements')
+export class PlacementSalaryController {
+  constructor(private readonly wallet: WalletService) {}
+
+  @Post(':id/salary-payments')
+  salary(
+    @CurrentUser() user: UserEntity,
+    @Param('id') id: string,
+    @Body() dto: AmountDto,
+  ) {
+    return this.wallet.payPlacementSalary(user, id, dto);
   }
 }

@@ -11,7 +11,13 @@ export type UserRole = 'intern' | 'company' | 'admin';
 export type VerificationStatus =
   'not_started' | 'pending' | 'verified' | 'resubmit' | 'rejected';
 export type PlacementStatus =
-  'requested' | 'accepted' | 'active' | 'ended' | 'rejected';
+  | 'requested'
+  | 'accepted'
+  | 'declined'
+  | 'active'
+  | 'ended'
+  | 'cancelled'
+  | 'replacement_requested';
 
 @Entity('users')
 export class UserEntity {

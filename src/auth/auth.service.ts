@@ -227,6 +227,23 @@ export class AuthService implements OnModuleInit {
     await this.users.save(user);
   }
 
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const user = await this.users
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.id = :userId', { userId })
+      .getOne();
+    if (!user || !(await compare(currentPassword, user.passwordHash))) {
+      throw new UnauthorizedException('Current password is incorrect.');
+    }
+    user.passwordHash = await hash(newPassword, 12);
+    await this.users.save(user);
+  }
+
   session(user: UserEntity) {
     return {
       accessToken: this.jwt.sign({ sub: user.id, role: user.role }),

@@ -15,7 +15,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -31,6 +31,8 @@
     "db:status": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/local-postgres.ps1 status",
     "db:setup": "pnpm build && node dist/database/setup-database.js",
     "db:create-admin": "pnpm build && node dist/database/create-admin.js",
+    "db:seed": "pnpm build && node dist/database/seed.js",
+    "db:seed:local": "pnpm build && node dist/database/seed.js --local",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e"
   },
   "dependencies": {

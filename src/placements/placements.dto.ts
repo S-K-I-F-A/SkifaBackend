@@ -38,6 +38,19 @@ export class ReplacementDto {
 }
 
 export class PlacementStatusDto {
-  @IsIn(['accepted', 'active', 'ended', 'rejected'])
-  status: 'accepted' | 'active' | 'ended' | 'rejected';
+  @IsIn([
+    'accepted',
+    'declined',
+    'active',
+    'ended',
+    'cancelled',
+    'replacement_requested',
+  ])
+  status:
+    | 'accepted'
+    | 'declined'
+    | 'active'
+    | 'ended'
+    | 'cancelled'
+    | 'replacement_requested';
 }
