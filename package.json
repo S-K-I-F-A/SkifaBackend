@@ -26,6 +26,13 @@
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "typecheck": "tsc --noEmit",
+    "db:start": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/local-postgres.ps1 start",
+    "db:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/local-postgres.ps1 stop",
+    "db:status": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/local-postgres.ps1 status",
+    "db:setup": "pnpm build && node dist/database/setup-database.js",
+    "db:create-admin": "pnpm build && node dist/database/create-admin.js",
+    "db:seed": "pnpm build && node dist/database/seed.js",
+    "db:seed:local": "pnpm build && node dist/database/seed.js --local",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e"
   },
   "dependencies": {
