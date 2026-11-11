@@ -8,42 +8,18 @@ export const envValidationSchema = Joi.object({
   PORT: Joi.number().port().default(4000),
   API_PREFIX: Joi.string().trim().default('api'),
   API_VERSION: Joi.string().trim().default('1'),
-  CORS_ORIGIN: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().trim().required(),
-    otherwise: Joi.string().trim().default('http://localhost:3000'),
-  }),
+  CORS_ORIGIN: Joi.string().trim().default('http://localhost:3000'),
   SWAGGER_ENABLED: Joi.boolean().truthy('true').falsy('false').default(true),
-  FRONTEND_URL: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().uri().required(),
-    otherwise: Joi.string().uri().default('http://localhost:3000'),
-  }),
-  JWT_SECRET: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().min(32).required(),
-    otherwise: Joi.string()
-      .min(32)
-      .default('local-only-change-this-jwt-secret-123456'),
-  }),
-  NIN_HASH_SECRET: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().min(32).required(),
-    otherwise: Joi.string()
-      .min(32)
-      .default('local-only-change-this-nin-secret-123456'),
-  }),
+  FRONTEND_URL: Joi.string().uri().optional(),
+  JWT_SECRET: Joi.string().min(32).optional(),
+  NIN_HASH_SECRET: Joi.string().min(32).optional(),
   COOKIE_SECURE: Joi.when('NODE_ENV', {
     is: 'production',
     then: Joi.boolean().valid(true).default(true),
     otherwise: Joi.boolean().truthy('true').falsy('false').default(false),
   }),
   COOKIE_SAME_SITE: Joi.string().valid('lax', 'strict', 'none').default('lax'),
-  DATABASE_URL: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().uri().required(),
-    otherwise: Joi.string().uri().optional(),
-  }),
+  DATABASE_URL: Joi.string().uri().optional(),
   DB_SSL: Joi.when('NODE_ENV', {
     is: 'production',
     then: Joi.boolean().truthy('true').falsy('false').default(true),
