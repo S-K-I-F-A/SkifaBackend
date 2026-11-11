@@ -14,6 +14,7 @@ coverage/
 # Logs and local caches
 *.log
 .pnpm-store/
+.local-postgres/
 .docx_review/
 data/*.sqlite
 uploads/
@@ -24,3 +25,4 @@ Thumbs.db
 
 # IDE-local project state
 .idea/
+config.bat
